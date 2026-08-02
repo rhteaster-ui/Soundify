@@ -98,9 +98,12 @@ var Home = {
 
         <!-- Greeting & Headline -->
         <div class="px-4 pt-4 pb-1">
-            <p class="text-xs font-bold text-blue-600 tracking-wide flex items-center gap-1.5 mb-1">
-                <span>${greetingText}, Rohmat</span> 👋
-            </p>
+            <div class="flex items-center gap-2 mb-1">
+                <button onclick="App.showWelcomeModal(true)" class="text-xs font-bold text-blue-600 hover:text-blue-500 tracking-wide flex items-center gap-1.5 active:scale-95 transition-all cursor-pointer group bg-blue-500/10 hover:bg-blue-500/20 px-3 py-1 rounded-full border border-blue-500/20" title="Klik untuk ubah nama panggilan">
+                    <span>${greetingText}, <strong class="font-extrabold text-blue-600">${(typeof App !== 'undefined' && App.getUserName) ? es(App.getUserName()) : 'Rohmat'}</strong></span> 👋
+                    <i data-lucide="edit-3" class="w-3 h-3 text-blue-500 opacity-70 group-hover:opacity-100 transition-opacity"></i>
+                </button>
+            </div>
             <h2 id="hero-animated-headline" class="text-2xl sm:text-3xl font-black text-[var(--text-primary)] leading-tight tracking-tight">
                 Discover new<br><span class="text-sky-500">trending tracks</span>
             </h2>

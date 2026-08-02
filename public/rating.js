@@ -212,7 +212,7 @@ var Rating = {
                         </div>
 
                         <!-- Name Input -->
-                        <input id="modal-name-input" type="text" placeholder="Nama Anda (opsional)..." class="w-full px-3 py-2.5 rounded-xl bg-zinc-900 border border-white/10 text-xs text-white placeholder-zinc-500 focus:outline-none focus:border-amber-400/60 transition-all" />
+                        <input id="modal-name-input" type="text" placeholder="Nama Anda (opsional)..." value="${(typeof App !== 'undefined' && App.getUserName) ? es(App.getUserName()) : ''}" class="w-full px-3 py-2.5 rounded-xl bg-zinc-900 border border-white/10 text-xs text-white placeholder-zinc-500 focus:outline-none focus:border-amber-400/60 transition-all" />
 
                         <!-- Comment Textarea -->
                         <textarea id="modal-comment-input" rows="2" placeholder="Tuliskan ulasan atau saran pengembangan..." class="w-full p-3 rounded-xl bg-zinc-900 border border-white/10 text-xs text-white placeholder-zinc-500 focus:outline-none focus:border-amber-400/60 resize-none transition-all"></textarea>

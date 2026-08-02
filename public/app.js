@@ -553,6 +553,21 @@ var App={
                 <div>
                     <div class="text-[9px] font-black uppercase tracking-widest text-muted mb-2 px-1">Sistem & Aplikasi</div>
                     <div class="space-y-1.5">
+                        <button onclick="App.closeDrawer(); App.showWelcomeModal(true);" class="w-full flex items-center justify-between p-2.5 rounded-xl hover:bg-white/5 border border-transparent hover:border-white/10 text-white transition-all cursor-pointer group">
+                            <div class="flex items-center gap-3">
+                                <div class="w-7 h-7 rounded-lg bg-indigo-500/10 text-indigo-400 flex items-center justify-center group-hover:scale-110 transition-transform">
+                                    <i data-lucide="user" class="w-3.5 h-3.5"></i>
+                                </div>
+                                <div class="text-left">
+                                    <div class="text-xs font-bold text-white flex items-center gap-1.5">
+                                        <span>Profil & Nama Saya</span>
+                                    </div>
+                                    <div class="text-[9px] text-muted">Ubah nama panggilan Anda</div>
+                                </div>
+                            </div>
+                            <i data-lucide="chevron-right" class="w-3.5 h-3.5 text-muted group-hover:translate-x-0.5 transition-transform"></i>
+                        </button>
+
                         <button onclick="App.closeDrawer(); if (typeof Rating !== 'undefined') Rating.openModal();" class="w-full flex items-center justify-between p-2.5 rounded-xl hover:bg-white/5 border border-transparent hover:border-white/10 text-white transition-all cursor-pointer group">
                             <div class="flex items-center gap-3">
                                 <div class="w-7 h-7 rounded-lg bg-amber-500/10 text-amber-400 flex items-center justify-center group-hover:scale-110 transition-transform">
@@ -1270,6 +1285,110 @@ var Library={
             return;
         }
         S.pl=pl.songs;S.pi=index;S.ps='playlist';S.ct=S.pl[S.pi];UU();MP.show();S.il=true;UB();resetLyricsUI(S.ct.videoId);loadTrack(S.ct);
+    },
+    getUserName() {
+        var name = localStorage.getItem('soundify_username');
+        if (name && name.trim()) return name.trim();
+        return 'Rohmat';
+    },
+    showWelcomeModal(forceOpen) {
+        var hasShown = localStorage.getItem('soundify_welcome_shown');
+        if (!forceOpen && hasShown && localStorage.getItem('soundify_username')) {
+            return;
+        }
+
+        var existing = gid('welcome-modal-popup');
+        if (existing) existing.remove();
+
+        var currentName = App.getUserName();
+        if (currentName === 'Rohmat' && !localStorage.getItem('soundify_username')) {
+            currentName = '';
+        }
+
+        var modal = document.createElement('div');
+        modal.id = 'welcome-modal-popup';
+        modal.className = 'fixed inset-0 z-[350] flex items-center justify-center p-4 bg-black/80 backdrop-blur-md transition-all duration-300 animate-fade-in';
+        modal.onclick = function(e) {
+            if (e.target === modal && localStorage.getItem('soundify_welcome_shown')) {
+                modal.remove();
+            }
+        };
+
+        modal.innerHTML = `
+        <div class="glass-strong relative w-full max-w-sm rounded-3xl p-6 border border-white/20 text-center shadow-2xl overflow-hidden bg-gradient-to-b from-zinc-900/95 via-zinc-900/98 to-black/95 text-white animate-card-up">
+            <div class="absolute -top-12 left-1/2 -translate-x-1/2 w-44 h-44 bg-blue-500/20 rounded-full blur-3xl pointer-events-none"></div>
+
+            <div class="relative z-10 space-y-4">
+                <div class="relative w-20 h-20 rounded-full mx-auto p-1 bg-gradient-to-tr from-blue-600 via-indigo-500 to-cyan-400 shadow-xl shadow-blue-500/20">
+                    <img src="/logo.png" class="w-full h-full object-cover rounded-full bg-black" onerror="this.src='${FI}'" alt="Soundify" />
+                    <div class="absolute -bottom-1 -right-1 w-7 h-7 rounded-full bg-amber-500 text-black flex items-center justify-center text-xs font-black shadow-md border-2 border-zinc-900">
+                        <i data-lucide="sparkles" class="w-3.5 h-3.5 fill-black"></i>
+                    </div>
+                </div>
+
+                <div>
+                    <h2 class="text-xl font-black text-white tracking-tight leading-tight">Selamat Datang di Soundify</h2>
+                    <p class="text-[11px] text-blue-400 font-extrabold mt-1 tracking-wide uppercase">rhmt sound ecosystem</p>
+                </div>
+
+                <div class="p-3.5 rounded-2xl bg-white/5 border border-white/10 text-xs text-zinc-300 leading-relaxed font-medium">
+                    Jelajahi & dengarkan jutaan musik favoritmu secara jernih & tanpa iklan. Masukkan nama Anda untuk melanjutkan:
+                </div>
+
+                <div class="space-y-3 pt-1">
+                    <div class="relative">
+                        <input type="text" id="welcome-name-input" maxlength="25" placeholder="Masukkan nama Anda..." value="${es(currentName)}" class="w-full py-3.5 px-4 rounded-2xl bg-white/10 border border-white/20 text-white placeholder:text-zinc-500 font-bold text-center text-sm focus:outline-none focus:border-blue-500 focus:bg-white/20 transition-all shadow-inner" />
+                    </div>
+
+                    <button id="welcome-submit-btn" onclick="App.submitWelcomeName()" class="w-full py-3.5 rounded-2xl bg-gradient-to-r from-blue-600 via-indigo-600 to-purple-600 hover:from-blue-500 hover:to-indigo-500 text-white font-extrabold text-xs shadow-lg active:scale-95 transition-all flex items-center justify-center gap-2 cursor-pointer border border-blue-400/30">
+                        <span>Lanjut ke Soundify</span>
+                        <i data-lucide="arrow-right" class="w-4 h-4"></i>
+                    </button>
+                </div>
+
+                <div class="pt-3 border-t border-white/10 flex items-center justify-center gap-2 text-[10px] text-zinc-400 font-semibold">
+                    <span class="flex items-center gap-1 text-emerald-400"><i data-lucide="shield-check" class="w-3 h-3"></i> Gratis</span>
+                    <span>•</span>
+                    <span class="flex items-center gap-1 text-amber-400"><i data-lucide="zap" class="w-3 h-3"></i> Tanpa Iklan</span>
+                    <span>•</span>
+                    <span class="flex items-center gap-1 text-sky-400"><i data-lucide="music" class="w-3 h-3"></i> HQ Audio</span>
+                </div>
+            </div>
+        </div>
+        `;
+
+        document.body.appendChild(modal);
+        if (typeof lucide !== 'undefined') lucide.createIcons();
+
+        var inputEl = gid('welcome-name-input');
+        if (inputEl) {
+            setTimeout(function() { inputEl.focus(); }, 100);
+            inputEl.addEventListener('keyup', function(e) {
+                if (e.key === 'Enter') App.submitWelcomeName();
+            });
+        }
+    },
+    submitWelcomeName() {
+        var inputEl = gid('welcome-name-input');
+        var name = inputEl ? inputEl.value.trim() : '';
+        if (!name) name = 'Rohmat';
+
+        localStorage.setItem('soundify_username', name);
+        localStorage.setItem('soundify_welcome_shown', 'true');
+
+        var modal = gid('welcome-modal-popup');
+        if (modal) {
+            modal.style.opacity = '0';
+            setTimeout(function() { modal.remove(); }, 250);
+        }
+
+        if (typeof Home !== 'undefined' && Home.render) {
+            Home.render();
+        }
+
+        if (typeof showToast === 'function') {
+            showToast('✨ Selamat datang, ' + name + '! Selamat menikmati musik.');
+        }
     }
 };
 
@@ -1280,6 +1399,9 @@ function dismissSplashScreen() {
         setTimeout(function() {
             if (splash && splash.parentElement) {
                 splash.parentElement.removeChild(splash);
+            }
+            if (typeof App !== 'undefined' && App.showWelcomeModal) {
+                App.showWelcomeModal(false);
             }
         }, 700);
     }
