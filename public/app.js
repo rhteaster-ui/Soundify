@@ -662,12 +662,16 @@ var App={
     clearAppCache(){
         if (confirm('Apakah Anda yakin ingin membersihkan cache & reset memori lokal?')) {
             localStorage.clear();
+            if (typeof sessionStorage !== 'undefined') sessionStorage.clear();
             if (typeof showToast === 'function') showToast('🧹 Cache dibersihkan! Memuat ulang...');
             setTimeout(function(){ location.reload(); }, 600);
         }
     },
-    showV3Popup() {
-        if(localStorage.getItem('seen_v3_popup_update')) return;
+    showV3Popup(force) {
+        if (!force && localStorage.getItem('seen_v3_popup_update')) return;
+        var existing = gid('v3-popup');
+        if (existing) existing.remove();
+
         var popup = document.createElement('div');
         popup.id = 'v3-popup';
         popup.className = 'fixed inset-0 z-[400] flex items-center justify-center bg-black/80 backdrop-blur-sm px-4';
@@ -1356,7 +1360,7 @@ var Library={
             setTimeout(function() {
                 modal.remove();
                 if (typeof App !== 'undefined' && App.showV3Popup) {
-                    App.showV3Popup();
+                    App.showV3Popup(true);
                 }
             }, 250);
         }
@@ -1380,10 +1384,11 @@ function dismissSplashScreen() {
                 splash.parentElement.removeChild(splash);
             }
             var hasWelcomeShown = localStorage.getItem('soundify_welcome_shown');
-            if (!hasWelcomeShown && typeof App !== 'undefined' && App.showWelcomeModal) {
-                App.showWelcomeModal(false);
+            var hasName = localStorage.getItem('soundify_username');
+            if ((!hasWelcomeShown || !hasName) && typeof App !== 'undefined' && App.showWelcomeModal) {
+                App.showWelcomeModal(true);
             } else if (typeof App !== 'undefined' && App.showV3Popup) {
-                App.showV3Popup();
+                App.showV3Popup(false);
             }
         }, 400);
     }
