@@ -740,32 +740,6 @@ var App={
 };
 App.init();Home.fetch();
 
-// SPLASH SCREEN - LOGO BULAT BESAR
-(function(){
-    var sp=gid('splash-screen');
-    if(!sp)return;
-    // Ganti logo jadi bulat besar
-    var logoWrap=sp.querySelector('.logo-wrap');
-    if(logoWrap){
-        logoWrap.style.width='200px';
-        logoWrap.style.height='200px';
-        logoWrap.style.borderRadius='50%';
-    }
-    var logo=sp.querySelector('.logo');
-    if(logo){
-        logo.style.borderRadius='50%';
-        logo.style.objectFit='cover';
-    }
-    setTimeout(function(){
-        sp.classList.add('hide');
-        setTimeout(function(){ 
-            if(sp&&sp.parentNode) sp.parentNode.removeChild(sp); 
-            // Trigger V3 Update popup here
-            App.showV3Popup();
-        },350);
-    },2000);
-})();
-
 var Library={
     activeTab: 'liked',
     setTab(t){
@@ -1379,7 +1353,12 @@ var Library={
         var modal = gid('welcome-modal-popup');
         if (modal) {
             modal.style.opacity = '0';
-            setTimeout(function() { modal.remove(); }, 250);
+            setTimeout(function() {
+                modal.remove();
+                if (typeof App !== 'undefined' && App.showV3Popup) {
+                    App.showV3Popup();
+                }
+            }, 250);
         }
 
         if (typeof Home !== 'undefined' && Home.render) {
@@ -1400,18 +1379,21 @@ function dismissSplashScreen() {
             if (splash && splash.parentElement) {
                 splash.parentElement.removeChild(splash);
             }
-            if (typeof App !== 'undefined' && App.showWelcomeModal) {
+            var hasWelcomeShown = localStorage.getItem('soundify_welcome_shown');
+            if (!hasWelcomeShown && typeof App !== 'undefined' && App.showWelcomeModal) {
                 App.showWelcomeModal(false);
+            } else if (typeof App !== 'undefined' && App.showV3Popup) {
+                App.showV3Popup();
             }
-        }, 700);
+        }, 400);
     }
 }
 
-// App.init() sudah dipanggil di atas, blok ini HANYA dismiss splash
+// Dismiss splash screen setelah splash logo animasi
 if (document.readyState === 'loading') {
     document.addEventListener('DOMContentLoaded', function() {
-        setTimeout(dismissSplashScreen, 3200);
+        setTimeout(dismissSplashScreen, 1800);
     });
 } else {
-    setTimeout(dismissSplashScreen, 3200);
+    setTimeout(dismissSplashScreen, 1800);
 }
