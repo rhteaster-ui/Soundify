@@ -1,0 +1,19 @@
+{
+  "name": "Soundify • Music Ecosystem",
+  "short_name": "Soundify",
+  "description": "Soundify - Clean & Crisp Music Streaming by rhmt",
+  "id": "/",
+  "start_url": "/",
+  "scope": "/",
+  "display": "standalone",
+  "orientation": "portrait",
+  "background_color": "#0b0a12",
+  "theme_color": "#0b0a12",
+  "categories": ["music", "entertainment"],
+  "icons": [
+    { "src": "/logo-192.png", "sizes": "192x192", "type": "image/png", "purpose": "any" },
+    { "src": "/logo-192.png", "sizes": "192x192", "type": "image/png", "purpose": "maskable" },
+    { "src": "/logo-512.png", "sizes": "512x512", "type": "image/png", "purpose": "any" },
+    { "src": "/logo-512.png", "sizes": "512x512", "type": "image/png", "purpose": "maskable" }
+  ]
+}

@@ -1,0 +1,6 @@
+{
+  "name": "Soundify",
+  "description": "Soundify - Premium Music Player featuring YouTube Music streaming, lyrics, and rhmt sound ecosystem",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
